@@ -1,65 +1,124 @@
-<h1>Telegram Price Bot</h1>
+# 📊 Product Price Tracker & Telegram Bot
 
-Telegram Price Bot is a Python-based Telegram bot that provides users with insights into product pricing trends. The bot analyzes historical price data of various products and offers recommendations based on price forecasts. It offers three main features:
+## 📖 Overview
+This project consists of a **Product Price Tracker** and a **Telegram Bot** that allows users to:
+- Analyze historical product prices from the **Hong Kong Price Watch API**.
+- Perform price predictions using time series forecasting (ARIMA model).
+- Interact with a Telegram Bot to query product prices, view price trends, and receive purchase recommendations.
 
-    Product search & price prediction: Users can search for a specific product, and the bot will find the closest matches from a database of products. Upon selecting a product, the bot uses a special method to predict the product's price over the next week. Based on the prediction, it advises users whether to buy now or wait for a better price.
+---
 
-    Data update: The bot regularly updates its product database to provide the most accurate and up-to-date information. Users can trigger a manual update using the "Update" button.
+## 🛠️ Features
+1. **Historical Price Data Retrieval**:
+   - Uses the **Hong Kong Price Watch API** to fetch historical product prices.
+   - Cleans and consolidates data into a structured format for analysis.
 
-    Bot termination: Users can choose to stop interacting with the bot, which will then send a goodbye video and end the session.
+2. **Price Prediction**:
+   - Utilizes the **ARIMA model** to forecast future product prices based on historical trends.
+   - Provides actionable recommendations to users: whether to buy now or wait.
 
-Prerequisites
+3. **Telegram Bot Integration**:
+   - A bot built with the **pyTelegramBotAPI** to make data queries more accessible.
+   - Features:
+     - **Product Search**: Users can search for a product and receive a price trend graph.
+     - **Price Forecasting**: Predicts price movements and advises users.
+     - **Data Update**: Keeps the product database up-to-date.
+     - **Session Management**: Allows users to start and terminate bot sessions.
 
-Before running the Telegram Price Bot, make sure you have the following dependencies installed:
+---
 
-    Python 3.10 or higher
-    pandas
-    telebot
-    matplotlib
-    fuzzywuzzy
-    re
-    requests
-    io
-    tqdm
-    statsmodels
+## 📂 Project Structure
+```
+├── consolidated_function.py    # Core functions for data retrieval and processing
+├── tgBot.py                     # Telegram bot implementation
+├── database2.csv                # Sample product database (for bot usage)
+├── sample_plot.png              # Sample price trend plot
+└── output.mp4                   # Goodbye video for bot termination
+```
 
-You can install these dependencies using pip, the Python package manager, by running the following command:
+---
 
-    pip install pandas telebot matplotlib fuzzywuzzy re requests io tqdm statsmodels
+## 📋 Requirements
+- Python 3.8+
+- Libraries:
+  - pandas
+  - fuzzywuzzy
+  - requests
+  - statsmodels
+  - matplotlib
+  - pyTelegramBotAPI
+  - tqdm
 
-Usage
+Install the required libraries using:
+```bash
+pip install -r requirements.txt
+```
 
-    Clone this repository to your local machine.
-    Update the BOT_TOKEN variable in the tgBot.py file with your own Telegram bot token.
-    Place your product database CSV file in the same directory as the tgBot.py file, and update the db_df variable in the tgBot.py file to load your database.
-    Run the tgBot.py file to start the Telegram bot.
-    Start a chat with your Telegram bot and send the /start command to initiate the conversation.
-    Follow the bot's instructions to interact with it using the available commands and buttons.
+---
 
-The main functionalities of the consolidated function are as follows:
+## 🔧 Setup
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/product-price-tracker-bot.git
+   cd product-price-tracker-bot
+   ```
 
-    call_price_watch_list_api(start_date, end_date): This function is used to call the available price watch JSON names from the API. It takes the start date and end date as input and returns a list of timestamps.
+2. Create a **database file** (`database2.csv`) with the necessary product information.
 
-    price_watch_api(api_link, params): This function is used to call the Price Watch API and returns the JSON data as a Pandas DataFrame. It takes the API link and parameters as input and returns a dictionary containing the response message and the DataFrame.
+3. Update your **Telegram Bot Token** in `tgBot.py`:
+   ```python
+   BOT_TOKEN = "Your token"
+   ```
 
-    executing_price_watch_api(start_date, end_date): This function consolidates the above two functions and executes them at once. It takes the start date and end date as input and returns a cleaned and processed DataFrame.
+4. Run the bot:
+   ```bash
+   python tgBot.py
+   ```
 
-    offer(raw): This function processes the "Offers" column of the DataFrame returned by the Price Watch API and calculates the minimum unit and average unit price for each product.
+---
 
-    preprocess_string(s): This function preprocesses a string by removing or replacing any non-alphanumeric characters, including punctuation marks and spaces. It is used for string matching purposes.
+## 📈 How It Works
+1. **Historical Price Analysis**:
+   - The `consolidated_function.py` script retrieves historical price data from the API.
+   - The data is cleaned, structured, and prepared for analysis.
 
-    find_top_matches(user_input, unique_product_df, column_name='full_product_name', top_n=3): This function finds the top N matches of a user input string in a DataFrame of unique product names. It uses fuzzy string matching to find the matches based on similarity scores.
+2. **Price Forecasting**:
+   - The `forecast_price` function uses the ARIMA model to predict product prices.
+   - A graph showing price trends is generated using `matplotlib`.
 
-    fit_arima_model(product_df, product_name): This function fits an ARIMA model to the time series data of a product's prices and returns the model summary and forecasted prices.
+3. **Telegram Bot**:
+   - Users interact with the bot by sending messages and selecting options.
+   - The bot responds with product recommendations and trend graphs.
 
-    plot_product_price(product_df, product_name, start_date, end_date): This function plots the historical price data of a product from the Price Watch API.
+---
 
-    plot_forecasted_price(product_df, product_name, start_date, end_date, forecast_start_date, forecast_end_date): This function plots the historical price data and the forecasted prices of a product.
+## 🧩 Key Functions
+- **call_price_watch_list_api**: Fetches available timestamps for historical price data.
+- **price_watch_api**: Retrieves product data for a specific timestamp.
+- **executing_price_watch_api**: Consolidates data retrieval and cleaning processes.
+- **find_top_matches**: Finds the best-matching product names based on user input.
+- **forecast_price**: Uses ARIMA to predict future product prices.
+- **graph**: Plots the price trend for a given product.
 
-Commands and Buttons for the telegram bot
+---
 
-    /start: Start the conversation with the bot.
-    Product search: Search for a specific product and get price predictions.
-    Update: Manually update the product database.
-    end bot: End the bot session.
-    About: Learn more about the bot.
+## 📱 Bot Commands
+| Command     | Description                                |
+|-------------|--------------------------------------------|
+| `/start`    | Start the bot interaction.                 |
+| `/about`    | Learn more about the bot's features.       |
+| `/update`   | Update the product database.               |
+| `/end`      | Terminate the bot session.                 |
+
+---
+
+## 🔮 Future Enhancements
+- Add more advanced machine learning models for price forecasting.
+- Improve bot interactivity with more options and responses.
+- Integrate additional APIs for more comprehensive product data.
+
+---
+
+## 📧 Contact
+For any inquiries or issues, feel free to reach out via [GitHub Issues](https://github.com/your-username/product-price-tracker-bot/issues).
+
